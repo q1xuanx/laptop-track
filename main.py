@@ -14,26 +14,30 @@ def track():
 
     while(True):
         cpu_times = ps.cpu_times()
-        cpu_history.append(round(cpu_times.user / 3600, 2))
-        cpu_history.append(round(cpu_times.system / 3600, 2))
-        cpu_history.append(round(cpu_times.idle / 3600, 2))
-        cpu_history.append(round(cpu_times.interrupt / 3600, 2))
-        cpu_history.append(round(cpu_times.dpc / 3600, 2))
-        
+        cpu_history = [
+            round(cpu_times.user / 3600, 2),
+            round(cpu_times.system / 3600, 2),
+            round(cpu_times.idle / 3600, 2),
+            round(cpu_times.interrupt / 3600, 2),
+            round(cpu_times.dpc / 3600, 2),
+        ]
+
+        # CPU frequency
         load = ps.cpu_freq()
+        cpu_freq = [
+            round(load.current, 2),
+            round(load.min, 2),
+            round(load.max, 2),
+        ]
 
-        cpu_freq.append(load.current)
-        cpu_freq.append(load.min)
-        cpu_freq.append(load.max)
-
+        # RAM usage
         mem = ps.virtual_memory()
-        mem_track.append(mem.free)
-        mem_track.append(mem.used)
-        mem_track.append(mem.percent)
+        mem_track = [
+            round(mem.free / 1e9, 2),
+            round(mem.used / 1e9, 2),
+            round(mem.percent, 2),
+        ]
         
-        cpu_count = ps.cpu_count()
-
-
         plt.clt()
         
         plt.simple_bar(label_cpu, cpu_history, width=100, title="CPU Used")
@@ -44,7 +48,12 @@ def track():
 
         plt.simple_bar(label_mem, mem_track, width=100, title="Mem used")
         plt.show()
-        time.sleep(3)
+
+        time.sleep(1)
+
+        cpu_history.clear()
+        cpu_freq.clear()
+        mem_track.clear()
 
 
 
